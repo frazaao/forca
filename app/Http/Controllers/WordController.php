@@ -14,7 +14,16 @@ class WordController extends Controller
      */
     public function index()
     {
-        $words = Word::all();
+        
+        $filtro = $_GET;
+        
+        $words = Word::when(
+            isset($filtro['level']),
+            function ($q) use ($filtro) {
+                return $q->where('level', $filtro['level']);
+            }
+        )->get();
+        
         return response()->json($words);
     }
 
